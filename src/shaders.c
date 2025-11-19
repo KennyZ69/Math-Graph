@@ -1,9 +1,11 @@
 /* shader.c */
 
-#include "in/shader.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "in/glad/glad.h"
 #include <GLFW/glfw3.h>
+#include "in/shader.h"
+#include <GL/glext.h>
 
 static char *read_file(const char *path) {
 	FILE *f = fopen(path, "rb");
@@ -34,6 +36,48 @@ i32 load_shaders(const char *vertex_path, const char *fragment_path) {
 		return -1;
 	}
 
+	// get and compile the shaders
 	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vs, 1, (const char**)&vertex_data, 0);
+	glShaderSource(vs, 1, (const char**)&vs, NULL);
+	glCompileShader(vs);
+
+	// check the compilation
+	int success;
+	char log[512];
+	glGetShaderiv(vs, GL_COMPILE_STATUS, &success);
+	if (!success) {
+		glGetShaderInfoLog(vs, 512, NULL, log);
+		fprintf(stderr, "Vertex shader compilation error: %s\n", log);
+	}
+
+	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fs, 1, (const char**)&fs, NULL);
+	glCompileShader(fs);
+
+	// check the compilation
+	glGetShaderiv(vs, GL_COMPILE_STATUS, &success);
+	if (!success) {
+		glGetShaderInfoLog(vs, 512, NULL, log);
+		fprintf(stderr, "Fragment shader compilation error: %s\n", log);
+	}
+
+	// program? for some reason? I guess I will need to read more on that later
+	GLuint program = glCreateProgram();
+	glAttachShader(program, vs);
+	glAttachShader(program, fs);
+	glLinkProgram(program);
+
+	glGetProgramiv(program, GL_LINK_STATUS, &success);
+	if (!success) {
+		glGetProgramInfoLog(program, 512, NULL, log);
+		fprintf(stderr, "Program linking error: %s\n", log);
+	}
+
+	glDeleteShader(vs);
+	glDeleteShader(fs);
+
+	free(vertex_data);
+	free(fragment_data);
+
+	return program;
 }
