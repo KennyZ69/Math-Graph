@@ -6,13 +6,16 @@
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "in/app.h"
+#include "in/renderer.h"
 
 static void framebuffer_size_callback(GLFWwindow *win, int width, int height) {
 	glViewport(0, 0, width, height);
 }
 
 static GLFWwindow *win;
+static Renderer *renderer;
 
 int app_init(const char *title) {
 	printf("Initializing the %s app...\n", title);
@@ -37,8 +40,14 @@ int app_init(const char *title) {
 		return -1;
 	}
 
+	renderer = malloc(sizeof(Renderer));
+	if (renderer_init(renderer) == -1) {
+		fprintf(stderr, "Failed to init renderer\n");
+		return -1;
+	}
+
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f); // dark gray background
 
 	return 0;
 }
@@ -50,10 +59,12 @@ void app_run() {
 	while (running && !glfwWindowShouldClose(win)) {
 
 		// TODO: input events and rendering
-		
-		glClear(GL_COLOR_BUFFER_BIT);
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		handle_keys(win, &running);
+
+		draw(renderer);
 
 		glfwSwapBuffers(win);
 		glfwPollEvents();

@@ -11,3 +11,9 @@ typedef struct {
 
 	float projection[16]; // projection matrix
 } Renderer;
+
+int renderer_init(Renderer *renderer);
+
+void renderer_destroy(Renderer *renderer);
+
+void draw(Renderer *renderer);

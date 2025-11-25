@@ -20,6 +20,11 @@ static char *read_file(const char *path) {
 	rewind(f);
 
 	char *buf = malloc(len + 1);
+	if (!buf) {
+		fprintf(stderr, "Memory allocation error\n");
+		fclose(f);
+		return NULL;
+	}
 	fread(buf, 1, len, f);
 	buf[len] = '\0';
 
@@ -38,7 +43,8 @@ i32 load_shaders(const char *vertex_path, const char *fragment_path) {
 
 	// get and compile the shaders
 	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vs, 1, (const char**)&vs, NULL);
+	const char *vsrc = vertex_data;
+	glShaderSource(vs, 1, &vsrc, NULL);
 	glCompileShader(vs);
 
 	// check the compilation
@@ -51,7 +57,8 @@ i32 load_shaders(const char *vertex_path, const char *fragment_path) {
 	}
 
 	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fs, 1, (const char**)&fs, NULL);
+	const char *fsrc = fragment_data;
+	glShaderSource(fs, 1, &fsrc, NULL);
 	glCompileShader(fs);
 
 	// check the compilation
@@ -61,7 +68,6 @@ i32 load_shaders(const char *vertex_path, const char *fragment_path) {
 		fprintf(stderr, "Fragment shader compilation error: %s\n", log);
 	}
 
-	// program? for some reason? I guess I will need to read more on that later
 	GLuint program = glCreateProgram();
 	glAttachShader(program, vs);
 	glAttachShader(program, fs);
