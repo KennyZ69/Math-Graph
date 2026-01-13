@@ -2,7 +2,11 @@
 *
 */
 
+
 #include "in/glad/glad.h"
+
+#include "in/imgui_wrap.h"
+
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
@@ -48,6 +52,11 @@ int app_init(const char *title) {
 
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f); // dark gray background
+	
+	if (imgui_init(win) == -1) {
+		fprintf(stderr,"Failed to init imgui lib\n");
+		return -1;
+	}
 
 	return 0;
 }
@@ -64,7 +73,11 @@ void app_run() {
 
 		handle_keys(win, &running);
 
+		// draw the gl content
 		draw(renderer);
+
+		// draw the imgui content (input handling for now)
+		imgui_render();
 
 		glfwSwapBuffers(win);
 		glfwPollEvents();
@@ -73,6 +86,7 @@ void app_run() {
 
 void cleanup() {
 	printf("Closing up the app and cleaning...\n");
+	imgui_shutdown();
 	glfwDestroyWindow(win);
 	glfwTerminate();
 }

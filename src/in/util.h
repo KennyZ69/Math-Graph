@@ -1,5 +1,6 @@
 /* util.h */
 
+#include <GLFW/glfw3.h>
 
 #define SCREEN_HEIGHT 1200
 #define SCREEN_WIDTH 1000
@@ -16,3 +17,13 @@ typedef unsigned int i32;
 typedef unsigned long int i64;
 
 typedef unsigned int uint;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+// C declarations for c++
+// I suppose
+
+#ifdef __cplusplus
+}
+#endif

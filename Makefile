@@ -1,8 +1,12 @@
-CFLAGS = -Wall -Wextra -Iinclude
+CFLAGS = -Wall -Wextra -Iinclude -Iimgui
 LDFLAGS = -lglfw -lGL -ldl -lm
 
 SRC = main.c $(wildcard src/*.c)
-OBJ = $(SRC:.c=.o)
+CXX_SRC = $(wildcard imgui/*.cpp) $(wildcard imgui/backends/*.cpp)
+
+C_OBJ = $(SRC:.c=.o)
+CXX_OBJ = $(CXX_SRC:.cpp=.o)
+OBJ = $(C_OBJ) $(CXX_OBJ)
 TARGET = graphing_app
 
 all: $(TARGET)
@@ -13,10 +17,13 @@ $(TARGET): $(OBJ)
 %.o: %.c
 	gcc $(CFLAGS) -c $< -o $@
 
+%.o: %.cpp
+	g++ $(CFLAGS) -c $< -o $@
+
 run:
 	./$(TARGET)
 
 clean:
-	rm -f $(OBJ) $(TARGET)
+	rm -f $(OBJ) $(TARGET) imgui/*.o imgui/backends/*.o
 
 .PHONY: all clean
