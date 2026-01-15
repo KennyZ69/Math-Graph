@@ -1,8 +1,8 @@
 /* shader.c */
 
+#include "in/glad/glad.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "in/glad/glad.h"
 #include <GLFW/glfw3.h>
 #include "in/shader.h"
 #include <GL/glext.h>

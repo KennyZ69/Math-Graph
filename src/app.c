@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "in/app.h"
+#include "in/input.h"
 #include "in/renderer.h"
 
 static void framebuffer_size_callback(GLFWwindow *win, int width, int height) {
@@ -53,7 +54,8 @@ int app_init(const char *title) {
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f); // dark gray background
 	
-	if (imgui_init(win) == -1) {
+	// for now there is NULL buffer
+	if (imgui_init(win, NULL) == -1) {
 		fprintf(stderr,"Failed to init imgui lib\n");
 		return -1;
 	}
@@ -64,10 +66,12 @@ int app_init(const char *title) {
 void app_run() {
 	i8 running = true;
 
+	static char func_buf[256] = "sin(x)";
+	static int in_changed = 0;
+	static int submited = 0;
+
 	printf("Running the app...\n");
 	while (running && !glfwWindowShouldClose(win)) {
-
-		// TODO: input events and rendering
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -76,7 +80,15 @@ void app_run() {
 		// draw the gl content
 		draw(renderer);
 
-		// draw the imgui content (input handling for now)
+		imgui_new_frame();
+
+		// draw out the input box
+		if (input_box(func_buf, sizeof(func_buf), &in_changed, &submited)) {
+			printf("function prefix changed: %s\n", func_buf);;
+			if (submited) printf("Input was submited!!!\n");
+		}
+
+		// render from imgui
 		imgui_render();
 
 		glfwSwapBuffers(win);

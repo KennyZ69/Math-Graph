@@ -1,10 +1,9 @@
 /* renderer.c */
 
+#include "in/glad/glad.h"
 #include "in/renderer.h"
 #include "in/shader.h"
 #include "in/util.h"
-#include "in/glad/glad.h"
-#include <GL/glext.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 

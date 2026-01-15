@@ -1,8 +1,17 @@
-CFLAGS = -Wall -Wextra -Iinclude -Iimgui
-LDFLAGS = -lglfw -lGL -ldl -lm
+CFLAGS = -Wall -Wextra -Isrc/in -Isrc/in/imgui -Isrc/in/imgui/backends
+LDFLAGS = -lglfw -lGL -ldl -lm -lstdc++
 
 SRC = main.c $(wildcard src/*.c)
-CXX_SRC = $(wildcard imgui/*.cpp) $(wildcard imgui/backends/*.cpp)
+# CXX_SRC = $(wildcard src/in/imgui/*.cpp) $(wildcard src/in/imgui/backends/*.cpp)
+CXX_SRC = src/imgui_wrap.cpp \
+	  src/in/imgui/imgui.cpp \
+          src/in/imgui/imgui_demo.cpp \
+          src/in/imgui/imgui_draw.cpp \
+          src/in/imgui/imgui_tables.cpp \
+          src/in/imgui/imgui_widgets.cpp \
+          src/in/imgui/backends/imgui_impl_glfw.cpp \
+          src/in/imgui/backends/imgui_impl_opengl3.cpp
+
 
 C_OBJ = $(SRC:.c=.o)
 CXX_OBJ = $(CXX_SRC:.cpp=.o)
@@ -12,13 +21,13 @@ TARGET = graphing_app
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
-	gcc $(OBJ) -o $(TARGET) $(LDFLAGS)
+	g++ $(OBJ) -o $(TARGET) $(LDFLAGS)
 
 %.o: %.c
 	gcc $(CFLAGS) -c $< -o $@
 
 %.o: %.cpp
-	g++ $(CFLAGS) -c $< -o $@
+	g++ $(CFLAGS) -std=c++11 -c $< -o $@
 
 run:
 	./$(TARGET)

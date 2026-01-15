@@ -8,3 +8,5 @@ void handle_keys(GLFWwindow *window, i8 *running);
 
 // somewhere in here I shoud add functions for the input box
 // and handle submitting both with enter and clicking the button
+
+int input_box(char *in_buf, int buf_size, int *in_changed, int *submited);

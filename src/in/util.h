@@ -18,12 +18,12 @@ typedef unsigned long int i64;
 
 typedef unsigned int uint;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-// C declarations for c++
-// I suppose
-
-#ifdef __cplusplus
-}
-#endif
+// #ifdef __cplusplus
+// extern "C" {
+// #endif
+// // C declarations for c++
+// // I suppose
+//
+// #ifdef __cplusplus
+// }
+// #endif
